@@ -1,13 +1,12 @@
-package cart
+package inmemory
 
 import (
 	"route256/cart/internal/domain/models"
-	"route256/cart/internal/infrastructure/repository/inmemory"
 	"testing"
 )
 
 func BenchmarkInMemoryCartRepository_AddItem(b *testing.B) {
-	repo := inmemory.NewCartRepository()
+	repo := NewCartRepository()
 	cart := &models.Cart{
 		UserID:     1,
 		Items:      make(models.ItemList, 0),
@@ -34,7 +33,7 @@ func BenchmarkInMemoryCartRepository_AddItem(b *testing.B) {
 }
 
 func BenchmarkInMemoryCartRepository_GetCart(b *testing.B) {
-	repo := inmemory.NewCartRepository()
+	repo := NewCartRepository()
 	cart := &models.Cart{
 		UserID: 1,
 		Items: models.ItemList{
@@ -61,7 +60,7 @@ func BenchmarkInMemoryCartRepository_GetCart(b *testing.B) {
 }
 
 func BenchmarkInMemoryCartRepository_RemoveItem(b *testing.B) {
-	repo := inmemory.NewCartRepository()
+	repo := NewCartRepository()
 	cart := &models.Cart{
 		UserID: 1,
 		Items: models.ItemList{
