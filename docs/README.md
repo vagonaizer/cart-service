@@ -2,54 +2,48 @@
 
 ## Описание
 
+Cart Service — это микросервис для управления корзиной пользователя. Он реализован по принципам чистой архитектуры (Clean Architecture) и легко расширяется под разные хранилища и интеграции.
+
+## Структура проекта
+
 ```
-├── bin
-│   └── cart-service
-├── cmd
-│   └── cart
-│       └── main.go
-├── config
-│   ├── config.go
-│   └── config.yaml
-├── docs
-│   └── README.md
-├── examples
-│   └── cart.http
+cart-service/
+├── cmd/
+│   └── cart/
+│       └── main.go           # Точка входа в приложение
+├── config/
+│   ├── config.go            # Конфигурация приложения
+│   └── config.yaml          # Файл конфигурации
+├── docs/
+│   └── README.md            # Документация
+├── internal/
+│   ├── core/
+│   │   └── app.go           # Инициализация приложения
+│   ├── domain/
+│   │   ├── cart.go          # Доменная модель корзины
+│   │   ├── item.go          # Доменная модель товара
+│   │   ├── ports.go         # Интерфейсы (порты)
+│   │   └── product.go       # Доменная модель продукта
+│   ├── infrastructure/
+│   │   ├── api/
+│   │   │   ├── dto/         # Data Transfer Objects
+│   │   │   ├── errors/      # Обработка ошибок
+│   │   │   ├── handlers.go  # HTTP-обработчики
+│   │   │   └── router.go    # Маршрутизация
+│   │   ├── client/
+│   │   │   └── product_client.go  # Клиент сервиса продуктов
+│   │   └── repository/
+│   │       └── inmemory/
+│   │           └── cart_repository.go  # In-memory реализация репозитория
+│   └── usecase/
+│       └── cart/
+│           └── cart_service.go  # Бизнес-логика корзины
+├── .gitignore
 ├── go.mod
 ├── go.sum
-└── internal
-    ├── core
-    │   └── app.go
-    ├── domain
-    │   ├── cart.go
-    │   ├── item.go
-    │   ├── ports.go
-    │   └── product.go
-    ├── infrastructure
-    │   ├── api
-    │   │   ├── dto
-    │   │   │   └── requests.go
-    │   │   ├── errors
-    │   │   │   └── errors.go
-    │   │   ├── handlers.go
-    │   │   ├── middleware.go
-    │   │   ├── router.go
-    │   │   └── routes.go
-    │   ├── client
-    │   │   ├── dto
-    │   │   │   └── requests.go
-    │   │   ├── product_client.go
-    │   │   └── retry_middleware.go
-    │   └── repository
-    │       └── inmemory
-    │           └── cart_repository.go
-    └── usecase
-        └── cart
-            └── cart_service.go
+├── LICENSE
+└── Makefile
 ```
-
-
-Cart Service — это микросервис для управления корзиной пользователя. Он реализован по принципам чистой архитектуры (Clean Architecture) и легко расширяется под разные хранилища и интеграции.
 
 ---
 
@@ -110,18 +104,6 @@ Cart Service — это микросервис для управления ко�
 - **Тестируемость**: бизнес-логика легко покрывается юнит-тестами (можно подменять репозитории и внешние сервисы).
 - **Гибкость**: легко менять инфраструктуру без переписывания бизнес-логики.
 - **Ясность**: каждый слой отвечает только за свою зону ответственности.
-
----
-
-## Основные директории
-
-- `internal/domain` — бизнес-модели и интерфейсы
-- `internal/usecase` — бизнес-логика (usecase)
-- `internal/infrastructure` — API, репозитории, клиенты
-- `internal/core` — сборка приложения
-- `cmd/cart` — точка входа
-- `config` — конфигурация
-- `docs` — документация
 
 ---
 
