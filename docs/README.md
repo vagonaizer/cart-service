@@ -2,6 +2,53 @@
 
 ## Описание
 
+```
+├── bin
+│   └── cart-service
+├── cmd
+│   └── cart
+│       └── main.go
+├── config
+│   ├── config.go
+│   └── config.yaml
+├── docs
+│   └── README.md
+├── examples
+│   └── cart.http
+├── go.mod
+├── go.sum
+└── internal
+    ├── core
+    │   └── app.go
+    ├── domain
+    │   ├── cart.go
+    │   ├── item.go
+    │   ├── ports.go
+    │   └── product.go
+    ├── infrastructure
+    │   ├── api
+    │   │   ├── dto
+    │   │   │   └── requests.go
+    │   │   ├── errors
+    │   │   │   └── errors.go
+    │   │   ├── handlers.go
+    │   │   ├── middleware.go
+    │   │   ├── router.go
+    │   │   └── routes.go
+    │   ├── client
+    │   │   ├── dto
+    │   │   │   └── requests.go
+    │   │   ├── product_client.go
+    │   │   └── retry_middleware.go
+    │   └── repository
+    │       └── inmemory
+    │           └── cart_repository.go
+    └── usecase
+        └── cart
+            └── cart_service.go
+```
+
+
 Cart Service — это микросервис для управления корзиной пользователя. Он реализован по принципам чистой архитектуры (Clean Architecture) и легко расширяется под разные хранилища и интеграции.
 
 ---
