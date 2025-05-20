@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"route256/cart/config"
-	"route256/cart/internal/domain"
+	"route256/cart/internal/domain/ports"
 	"route256/cart/internal/infrastructure/api"
 	"route256/cart/internal/infrastructure/client"
 	"route256/cart/internal/infrastructure/repository/inmemory"
@@ -15,7 +15,7 @@ import (
 // App represents the application
 type App struct {
 	Mux     *http.ServeMux
-	Service domain.CartService
+	Service ports.CartService
 }
 
 // NewApp creates a new application instance

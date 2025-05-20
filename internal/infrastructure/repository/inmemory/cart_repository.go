@@ -1,33 +1,32 @@
 package inmemory
 
 import (
-	"errors"
 	"sync"
 
-	"route256/cart/internal/domain"
+	"route256/cart/internal/domain/models"
 )
 
 // CartRepository implements domain.CartRepository interface
 // using in-memory storage
 type CartRepository struct {
 	mu    sync.RWMutex
-	carts map[int64]*domain.Cart
+	carts map[int64]*models.Cart
 }
 
 // NewCartRepository creates a new in-memory cart repository
 func NewCartRepository() *CartRepository {
 	return &CartRepository{
-		carts: make(map[int64]*domain.Cart),
+		carts: make(map[int64]*models.Cart),
 	}
 }
 
 // CreateCart implements domain.CartRepository
-func (r *CartRepository) CreateCart(cart *domain.Cart) error {
+func (r *CartRepository) CreateCart(cart *models.Cart) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.carts[cart.UserID]; exists {
-		return errors.New("cart already exists")
+		return models.ErrCartAlreadyExists
 	}
 
 	r.carts[cart.UserID] = cart
@@ -35,20 +34,20 @@ func (r *CartRepository) CreateCart(cart *domain.Cart) error {
 }
 
 // GetCart implements domain.CartRepository
-func (r *CartRepository) GetCart(userID int64) (*domain.Cart, error) {
+func (r *CartRepository) GetCart(userID int64) (*models.Cart, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
 	cart, exists := r.carts[userID]
 	if !exists {
-		return nil, domain.ErrCartNotFound
+		return nil, models.ErrCartNotFound
 	}
 
 	return cart, nil
 }
 
 // SaveCart implements domain.CartRepository
-func (r *CartRepository) SaveCart(cart *domain.Cart) error {
+func (r *CartRepository) SaveCart(cart *models.Cart) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -62,7 +61,7 @@ func (r *CartRepository) DeleteCart(userID int64) error {
 	defer r.mu.Unlock()
 
 	if _, exists := r.carts[userID]; !exists {
-		return domain.ErrCartNotFound
+		return models.ErrCartNotFound
 	}
 
 	delete(r.carts, userID)

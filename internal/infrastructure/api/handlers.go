@@ -7,18 +7,19 @@ import (
 	"net/http"
 	"strconv"
 
-	"route256/cart/internal/domain"
+	"route256/cart/internal/domain/models"
+	"route256/cart/internal/domain/ports"
 	"route256/cart/internal/infrastructure/api/dto"
 	apiErrors "route256/cart/internal/infrastructure/api/errors"
 )
 
 // Handler handles HTTP requests for the cart service
 type Handler struct {
-	service domain.CartService
+	service ports.CartService
 }
 
 // NewHandler creates a new cart service handler
-func NewHandler(service domain.CartService) *Handler {
+func NewHandler(service ports.CartService) *Handler {
 	return &Handler{
 		service: service,
 	}
@@ -63,7 +64,7 @@ func (h *Handler) AddItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.service.AddItem(userID, uint32(skuID), req.Count); err != nil {
-		if errors.Is(err, domain.ErrProductNotFound) {
+		if errors.Is(err, models.ErrProductNotFound) {
 			http.Error(w, err.Error(), http.StatusPreconditionFailed)
 			return
 		}
@@ -158,7 +159,7 @@ func (h *Handler) GetCart(w http.ResponseWriter, r *http.Request) {
 
 	cart, err := h.service.GetCart(userID)
 	if err != nil {
-		if errors.Is(err, domain.ErrCartNotFound) {
+		if errors.Is(err, models.ErrCartNotFound) {
 			http.Error(w, "cart not found", http.StatusNotFound)
 			return
 		}

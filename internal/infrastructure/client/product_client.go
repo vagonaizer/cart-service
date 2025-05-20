@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"route256/cart/internal/domain"
+	"route256/cart/internal/domain/models"
+	"route256/cart/internal/domain/ports"
 	"route256/cart/internal/infrastructure/client/dto"
 )
 
-// ProductClient implements domain.ProductService interface
+// ProductClient implements ports.ProductService interface
 type ProductClient struct {
 	baseURL    string
 	token      string
@@ -18,7 +19,7 @@ type ProductClient struct {
 }
 
 // NewProductClient creates a new product service client
-func NewProductClient(baseURL string, token string, httpClient *http.Client) domain.ProductService {
+func NewProductClient(baseURL string, token string, httpClient *http.Client) ports.ProductService {
 	return &ProductClient{
 		baseURL:    baseURL,
 		token:      token,
@@ -26,8 +27,8 @@ func NewProductClient(baseURL string, token string, httpClient *http.Client) dom
 	}
 }
 
-// GetProduct implements domain.ProductService
-func (c *ProductClient) GetProduct(sku uint32) (*domain.Product, error) {
+// GetProduct implements ports.ProductService
+func (c *ProductClient) GetProduct(sku uint32) (*models.Product, error) {
 	reqBody := dto.GetProductRequest{
 		Token: c.token,
 		SKU:   sku,
@@ -64,7 +65,7 @@ func (c *ProductClient) GetProduct(sku uint32) (*domain.Product, error) {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	return &domain.Product{
+	return &models.Product{
 		SKU:   sku,
 		Name:  productResp.Name,
 		Price: productResp.Price,

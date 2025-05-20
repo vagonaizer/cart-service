@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"time"
 
 	"route256/cart/config"
 	"route256/cart/internal/core"
@@ -26,8 +27,9 @@ func main() {
 
 	// Create HTTP server
 	server := &http.Server{
-		Addr:    ":8082",
-		Handler: api.LoggingMiddleware(app.Mux),
+		Addr:              ":8082",
+		Handler:           api.LoggingMiddleware(app.Mux),
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	// Start server

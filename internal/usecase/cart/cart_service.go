@@ -3,17 +3,18 @@ package cart
 import (
 	"errors"
 
-	"route256/cart/internal/domain"
+	"route256/cart/internal/domain/models"
+	"route256/cart/internal/domain/ports"
 )
 
-// CartService implements domain.CartService interface
+// CartService implements ports.CartService interface
 type CartService struct {
-	repo           domain.CartRepository
-	productService domain.ProductService
+	repo           ports.CartRepository
+	productService ports.ProductService
 }
 
 // NewCartService creates a new cart service
-func NewCartService(repo domain.CartRepository, productService domain.ProductService) domain.CartService {
+func NewCartService(repo ports.CartRepository, productService ports.ProductService) ports.CartService {
 	return &CartService{
 		repo:           repo,
 		productService: productService,
@@ -25,14 +26,14 @@ func (s *CartService) AddItem(userID int64, sku uint32, quantity uint16) error {
 	// Get product info
 	product, err := s.productService.GetProduct(sku)
 	if err != nil {
-		return domain.ErrProductNotFound
+		return models.ErrProductNotFound
 	}
 
 	// Get or create cart
 	cart, err := s.repo.GetCart(userID)
 	if err != nil {
-		if errors.Is(err, domain.ErrCartNotFound) {
-			cart = domain.NewCart(userID)
+		if errors.Is(err, models.ErrCartNotFound) {
+			cart = models.NewCart(userID)
 			// Create new cart
 			if err := s.repo.CreateCart(cart); err != nil {
 				return err
@@ -43,7 +44,7 @@ func (s *CartService) AddItem(userID int64, sku uint32, quantity uint16) error {
 	}
 
 	// Add item to cart
-	cart.AddItem(domain.Item{
+	cart.AddItem(models.Item{
 		SKU:      product.SKU,
 		Quantity: quantity,
 		Price:    product.Price,
@@ -60,7 +61,7 @@ func (s *CartService) AddItem(userID int64, sku uint32, quantity uint16) error {
 func (s *CartService) RemoveItem(userID int64, sku uint32) error {
 	cart, err := s.repo.GetCart(userID)
 	if err != nil {
-		if errors.Is(err, domain.ErrCartNotFound) {
+		if errors.Is(err, models.ErrCartNotFound) {
 			return nil // As per spec, return success if cart doesn't exist
 		}
 		return err
@@ -76,7 +77,7 @@ func (s *CartService) RemoveItem(userID int64, sku uint32) error {
 func (s *CartService) ClearCart(userID int64) error {
 	cart, err := s.repo.GetCart(userID)
 	if err != nil {
-		if errors.Is(err, domain.ErrCartNotFound) {
+		if errors.Is(err, models.ErrCartNotFound) {
 			return nil // As per spec, return success if cart doesn't exist
 		}
 		return err
@@ -87,14 +88,14 @@ func (s *CartService) ClearCart(userID int64) error {
 }
 
 // GetCart returns the user's cart
-func (s *CartService) GetCart(userID int64) (*domain.Cart, error) {
+func (s *CartService) GetCart(userID int64) (*models.Cart, error) {
 	cart, err := s.repo.GetCart(userID)
 	if err != nil {
 		return nil, err
 	}
 
 	if len(cart.Items) == 0 {
-		return nil, domain.ErrCartNotFound
+		return nil, models.ErrCartNotFound
 	}
 
 	return cart, nil
