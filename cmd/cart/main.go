@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"route256/cart/config"
-	"route256/cart/internal/core"
+	"route256/cart/internal/app"
 	"route256/cart/internal/infrastructure/api"
 )
 
@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// Create application
-	app := core.NewApp(cfg)
+	app := app.NewApp(cfg)
 
 	// Create HTTP server
 	server := &http.Server{
