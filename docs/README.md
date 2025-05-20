@@ -107,6 +107,3 @@ cart-service/
 
 ---
 
-## Контакты
-
-Вопросы и предложения: [your-email@example.com] 
