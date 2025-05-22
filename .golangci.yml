@@ -1,0 +1,34 @@
+linters:
+  enable:
+    - gocyclo
+    - gocognit
+    - gofmt
+    - golint
+    - govet
+    - errcheck
+    - staticcheck
+    - gosimple
+    - ineffassign
+    - unused
+    - misspell
+    - gosec
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  gocognit:
+    min-complexity: 15
+
+run:
+  deadline: 5m
+  tests: true
+  skip-dirs:
+    - vendor
+    - testdata
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - gocognit 
